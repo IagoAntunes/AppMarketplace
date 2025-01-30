@@ -5,4 +5,5 @@ sealed class AppMarketplaceRoutes(
 ) {
     object SplashScreenRoute : AppMarketplaceRoutes("splash_screen")
     object LoginScreenRoute : AppMarketplaceRoutes("login_screen")
+    object RegisterScreenRoute : AppMarketplaceRoutes("register_screen")
 }

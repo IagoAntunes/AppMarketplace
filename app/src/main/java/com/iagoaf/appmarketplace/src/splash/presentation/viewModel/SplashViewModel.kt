@@ -1,10 +1,10 @@
-package com.iagoaf.appmarketplace.src.splashScreen.presentation.viewModel
+package com.iagoaf.appmarketplace.src.splash.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.iagoaf.appmarketplace.core.routes.AppMarketplaceRoutes
-import com.iagoaf.appmarketplace.src.splashScreen.presentation.action.SplashActions
+import com.iagoaf.appmarketplace.src.splash.presentation.action.SplashActions
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

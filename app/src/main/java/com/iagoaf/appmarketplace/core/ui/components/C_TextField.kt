@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -45,8 +47,10 @@ fun CTextField(
     type: CTextFieldType = CTextFieldType.IDLE,
     value: String,
     label: String? = null,
+    errorMessage: String? = null,
     onValueChange: (String) -> Unit,
     hintText: String,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     leftIcon: Int? = null,
     rightIcon: Int? = null,
     singleLine: Boolean = true
@@ -91,6 +95,9 @@ fun CTextField(
                 unfocusedBorderColor = Color.Transparent,
                 focusedBorderColor = Color.Transparent
             ),
+            keyboardOptions = if (type == CTextFieldType.PASSWORD) KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Password,
+            ) else keyboardOptions,
             prefix = {
                 if (leftIcon != null) {
                     Image(
@@ -98,9 +105,9 @@ fun CTextField(
                         contentDescription = "",
                         colorFilter = if (isFocused.value || hasEnteredText.value) ColorFilter.tint(
                             orangeBase
-                        ) else ColorFilter.tint(gray200)
+                        ) else ColorFilter.tint(gray200),
+                        modifier = Modifier.padding(end = 6.dp)
                     )
-                    Spacer(Modifier.width(6.dp))
                 } else {
                     null
                 }
@@ -148,6 +155,14 @@ fun CTextField(
                     )
                 }
         )
+        if (errorMessage != null) {
+            Text(
+                text = errorMessage,
+                style = typography.bodySmall,
+                color = Color.Red,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
     }
 }
 
@@ -161,6 +176,21 @@ fun CTextFieldPreview() {
             hintText = "Digite algo",
             leftIcon = R.drawable.ic_mail,
             rightIcon = R.drawable.ic_mail,
+        )
+    }
+}
+
+@Preview
+@Composable
+fun CTextFieldErrorStaePreview() {
+    AppMarketplaceTheme {
+        CTextField(
+            value = "",
+            onValueChange = {},
+            hintText = "Digite algo",
+            leftIcon = R.drawable.ic_mail,
+            rightIcon = R.drawable.ic_mail,
+            errorMessage = "Erro de senha"
         )
     }
 }

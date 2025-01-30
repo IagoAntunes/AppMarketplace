@@ -1,4 +1,4 @@
-package com.iagoaf.appmarketplace.src.splashScreen.presentation.screen
+package com.iagoaf.appmarketplace.src.splash.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,7 +21,7 @@ import com.iagoaf.appmarketplace.core.ui.theme.AppMarketplaceTheme
 import com.iagoaf.appmarketplace.core.ui.theme.background
 import com.iagoaf.appmarketplace.core.ui.theme.gray500
 import com.iagoaf.appmarketplace.core.ui.theme.typography
-import com.iagoaf.appmarketplace.src.splashScreen.presentation.action.SplashActions
+import com.iagoaf.appmarketplace.src.splash.presentation.action.SplashActions
 
 @Composable
 fun SplashScreen(

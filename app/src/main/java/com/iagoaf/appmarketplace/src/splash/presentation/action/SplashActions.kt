@@ -1,4 +1,4 @@
-package com.iagoaf.appmarketplace.src.splashScreen.presentation.action
+package com.iagoaf.appmarketplace.src.splash.presentation.action
 
 sealed class SplashActions {
     object NavigateToLogin : SplashActions()

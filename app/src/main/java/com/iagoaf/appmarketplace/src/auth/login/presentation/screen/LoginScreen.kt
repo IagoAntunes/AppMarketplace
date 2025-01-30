@@ -1,4 +1,4 @@
-package com.iagoaf.appmarketplace.src.loginScren.presentation.screen
+package com.iagoaf.appmarketplace.src.auth.login.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -32,17 +32,23 @@ import com.iagoaf.appmarketplace.core.ui.theme.background
 import com.iagoaf.appmarketplace.core.ui.theme.gray300
 import com.iagoaf.appmarketplace.core.ui.theme.gray500
 import com.iagoaf.appmarketplace.core.ui.theme.typography
+import com.iagoaf.appmarketplace.src.auth.login.presentation.LoginActions
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    onAction: (LoginActions) -> Unit = {}
+) {
     val emailValue = remember {
         mutableStateOf("")
     }
     val passwordValue = remember {
         mutableStateOf("")
     }
+
     Scaffold(
-        containerColor = background
+        containerColor = background,
+        modifier = modifier
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -128,8 +134,10 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                     alignType = COutlinedButtonAlign.SPACE_BETWEEN,
                     text = "Cadastrar",
                     rightIcon = R.drawable.ic_arrow_right_02,
-
-                    )
+                    onClick = {
+                        onAction(LoginActions.NavigateToRegister)
+                    }
+                )
             }
         }
     }

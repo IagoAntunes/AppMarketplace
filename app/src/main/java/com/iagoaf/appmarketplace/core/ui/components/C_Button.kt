@@ -40,6 +40,7 @@ fun CButton(
     type: CButtonSize,
     alignType: CButtonAlign = CButtonAlign.CENTER,
     text: String,
+    enabled: Boolean = true,
     modifier: Modifier = Modifier,
     @DrawableRes leftIcon: Int? = null,
     @DrawableRes rightIcon: Int? = null,
@@ -49,6 +50,7 @@ fun CButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = orangeBase
         ),
+        enabled = enabled,
         shape = RoundedCornerShape(10.dp),
         contentPadding = if (type == CButtonSize.SMALL) PaddingValues(
             horizontal = 16.dp,

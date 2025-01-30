@@ -38,13 +38,14 @@ enum class COutlinedButtonAlign {
 fun COutLinedButton(
     type: COutlinedButtonSize,
     alignType: COutlinedButtonAlign = COutlinedButtonAlign.CENTER,
+    onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
     @DrawableRes leftIcon: Int? = null,
     @DrawableRes rightIcon: Int? = null,
 ) {
     OutlinedButton(
-        onClick = {},
+        onClick = onClick,
         border = BorderStroke(
             width = 1.dp,
             color = orangeBase
@@ -108,7 +109,8 @@ private fun CButtonMediumPreview() {
         type = COutlinedButtonSize.MEDIUM,
         leftIcon = R.drawable.ic_mail,
         rightIcon = R.drawable.ic_mail,
-        text = "Placeholder"
+        text = "Placeholder",
+        onClick = {}
     )
 }
 
@@ -119,6 +121,7 @@ private fun CButtonSmallPreview() {
         type = COutlinedButtonSize.SMALL,
         leftIcon = R.drawable.ic_mail,
         rightIcon = R.drawable.ic_mail,
-        text = "Placeholder"
+        text = "Placeholder",
+        onClick = {}
     )
 }
