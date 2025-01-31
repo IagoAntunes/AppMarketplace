@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("plugin.serialization") version "1.5.31"
 }
 
 android {
@@ -41,7 +42,11 @@ android {
 
 dependencies {
     val nav_version = "2.8.4"
-    implementation("io.insert-koin:koin-androidx-compose:3.4.5")
+    implementation(libs.supabase.kt)
+    implementation("io.ktor:ktor-client-android:3.0.0") // Para Android
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.postgrest.kt)
+    implementation(libs.auth.kt)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

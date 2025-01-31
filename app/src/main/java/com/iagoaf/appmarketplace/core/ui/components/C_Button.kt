@@ -41,12 +41,13 @@ fun CButton(
     alignType: CButtonAlign = CButtonAlign.CENTER,
     text: String,
     enabled: Boolean = true,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     @DrawableRes leftIcon: Int? = null,
     @DrawableRes rightIcon: Int? = null,
 ) {
     Button(
-        onClick = {},
+        onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = orangeBase
         ),
@@ -112,7 +113,8 @@ private fun CButtonMediumPreview() {
         type = CButtonSize.MEDIUM,
         leftIcon = R.drawable.ic_mail,
         rightIcon = R.drawable.ic_mail,
-        text = "Placeholder"
+        text = "Placeholder",
+        onClick = {}
     )
 }
 
@@ -123,6 +125,7 @@ private fun CButtonSmallPreview() {
         type = CButtonSize.SMALL,
         leftIcon = R.drawable.ic_mail,
         rightIcon = R.drawable.ic_mail,
-        text = "Placeholder"
+        text = "Placeholder",
+        onClick = {}
     )
 }

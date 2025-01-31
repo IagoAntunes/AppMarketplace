@@ -116,7 +116,8 @@ fun LoginScreen(
                     alignType = CButtonAlign.SPACE_BETWEEN,
                     text = "Acessar",
                     rightIcon = R.drawable.ic_arrow_right_02,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {}
                 )
             }
             Column(

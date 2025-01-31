@@ -50,6 +50,7 @@ fun CTextField(
     errorMessage: String? = null,
     onValueChange: (String) -> Unit,
     hintText: String,
+    enabled: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     leftIcon: Int? = null,
     rightIcon: Int? = null,
@@ -72,6 +73,7 @@ fun CTextField(
         OutlinedTextField(
             value = value,
             singleLine = singleLine,
+            enabled = enabled,
             onValueChange = {
                 onValueChange(it)
                 if (it.isNotEmpty()) {

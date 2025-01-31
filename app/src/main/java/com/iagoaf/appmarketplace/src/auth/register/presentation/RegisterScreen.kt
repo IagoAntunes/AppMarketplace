@@ -1,6 +1,5 @@
 package com.iagoaf.appmarketplace.src.auth.register.presentation
 
-import android.text.InputType
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,10 +18,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,11 +50,14 @@ import com.iagoaf.appmarketplace.core.ui.theme.orangeBase
 import com.iagoaf.appmarketplace.core.ui.theme.shape
 import com.iagoaf.appmarketplace.core.ui.theme.typography
 import com.iagoaf.appmarketplace.src.auth.register.RegisterActions
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     modifier: Modifier = Modifier,
+    state: RegisterScreenState,
+    listener: RegisterScreenListener,
     onAction: (RegisterActions) -> Unit = {},
 ) {
 
@@ -62,17 +68,52 @@ fun RegisterScreen(
     val confirmPasswordValue = remember { mutableStateOf("") }
     val formValidated = remember { mutableStateOf(false) }
 
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     fun validateForm() {
         formValidated.value = nameValue.value.isNotEmpty() &&
                 phoneValue.value.isNotEmpty() &&
                 mailValue.value.isNotEmpty() &&
                 passwordValue.value.isNotEmpty() &&
-                confirmPasswordValue.value.isNotEmpty()
+                confirmPasswordValue.value.isNotEmpty() && (passwordValue.value == confirmPasswordValue.value)
+    }
+
+    fun resetValuesForm() {
+        nameValue.value = ""
+        phoneValue.value = ""
+        mailValue.value = ""
+        passwordValue.value = ""
+        confirmPasswordValue.value = ""
+    }
+
+    LaunchedEffect(listener) {
+        when (listener) {
+            is RegisterScreenListener.ErrorRegister -> {
+
+                scope.launch {
+                    snackbarHostState.showSnackbar(listener.errorMessage)
+                }
+                onAction(RegisterActions.ResetListener)
+            }
+
+            is RegisterScreenListener.Idle -> {}
+            is RegisterScreenListener.SuccessRegister -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar("SUCCESS")
+                }
+                resetValuesForm()
+                onAction(RegisterActions.ResetListener)
+                onAction(RegisterActions.GoBackToLogin)
+            }
+        }
     }
 
     Scaffold(
         modifier = modifier,
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         containerColor = background,
     ) { innerPadding ->
         Column(
@@ -153,6 +194,7 @@ fun RegisterScreen(
                             nameValue.value = it
                             validateForm()
                         },
+                        enabled = state !is RegisterScreenState.Loading,
                         label = "NOME",
                         leftIcon = R.drawable.ic_user,
                         hintText = "Seu nome completo",
@@ -166,6 +208,7 @@ fun RegisterScreen(
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Phone,
                         ),
+                        enabled = state !is RegisterScreenState.Loading,
                         label = "TELEFONE",
                         leftIcon = R.drawable.ic_call,
                         hintText = "(00) 00000-0000",
@@ -189,6 +232,7 @@ fun RegisterScreen(
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email,
                         ),
+                        enabled = state !is RegisterScreenState.Loading,
                         label = "E-MAIL",
                         leftIcon = R.drawable.ic_mail,
                         hintText = "mail@examplo.br",
@@ -200,6 +244,7 @@ fun RegisterScreen(
                             passwordValue.value = it
                             validateForm()
                         },
+                        enabled = state !is RegisterScreenState.Loading,
                         label = "SENHA",
                         leftIcon = R.drawable.ic_access,
                         hintText = "Sua senha",
@@ -211,6 +256,7 @@ fun RegisterScreen(
                             confirmPasswordValue.value = it
                             validateForm()
                         },
+                        enabled = state !is RegisterScreenState.Loading,
                         label = "CONFIRMAR SENHA",
                         leftIcon = R.drawable.ic_access,
                         hintText = "Confirme a senha",
@@ -220,9 +266,17 @@ fun RegisterScreen(
                         type = CButtonSize.MEDIUM,
                         alignType = CButtonAlign.SPACE_BETWEEN,
                         text = "Cadastrar",
-                        enabled = formValidated.value,
+                        enabled = (formValidated.value && state !is RegisterScreenState.Loading),
                         rightIcon = R.drawable.ic_arrow_right_02,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            onAction(
+                                RegisterActions.Register(
+                                    email = mailValue.value,
+                                    password = passwordValue.value
+                                )
+                            )
+                        }
                     )
                 }
                 Spacer(Modifier.height(24.dp))
@@ -251,5 +305,8 @@ fun RegisterScreen(
 @Preview
 @Composable
 private fun RegisterScreenPreview() {
-    RegisterScreen()
+    RegisterScreen(
+        state = RegisterScreenState.Idle,
+        listener = RegisterScreenListener.Idle,
+    )
 }
