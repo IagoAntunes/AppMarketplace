@@ -1,5 +1,6 @@
 package com.iagoaf.appmarketplace.src.auth.login.presentation.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,10 +11,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -33,11 +39,16 @@ import com.iagoaf.appmarketplace.core.ui.theme.gray300
 import com.iagoaf.appmarketplace.core.ui.theme.gray500
 import com.iagoaf.appmarketplace.core.ui.theme.typography
 import com.iagoaf.appmarketplace.src.auth.login.presentation.LoginActions
+import com.iagoaf.appmarketplace.src.auth.login.presentation.LoginScreenListener
+import com.iagoaf.appmarketplace.src.auth.login.presentation.LoginScreenState
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    onAction: (LoginActions) -> Unit = {}
+    onAction: (LoginActions) -> Unit = {},
+    state: LoginScreenState,
+    listener: LoginScreenListener,
 ) {
     val emailValue = remember {
         mutableStateOf("")
@@ -46,9 +57,49 @@ fun LoginScreen(
         mutableStateOf("")
     }
 
+    val formValidated = remember {
+        mutableStateOf(false)
+    }
+
+    fun validateForm() {
+        formValidated.value = emailValue.value.isNotEmpty() && passwordValue.value.isNotEmpty()
+    }
+
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(listener) {
+        Log.e("LoginScreen", "Listener: $listener")
+        when (listener) {
+            is LoginScreenListener.Error -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = listener.errorMessage,
+                        duration = SnackbarDuration.Short
+                    )
+                }
+            }
+
+            LoginScreenListener.Idle -> {
+
+            }
+
+            is LoginScreenListener.Success -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "SUCCESS",
+                        duration = SnackbarDuration.Short
+                    )
+                }
+
+                onAction(LoginActions.NavigateToHome)
+            }
+        }
+    }
+
     Scaffold(
         containerColor = background,
-        modifier = modifier
+        modifier = modifier,
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -94,6 +145,7 @@ fun LoginScreen(
                     value = emailValue.value,
                     onValueChange = {
                         emailValue.value = it
+                        validateForm()
                     },
                     hintText = "mail@exemplo.br",
                     label = "E-MAIL",
@@ -105,6 +157,7 @@ fun LoginScreen(
                     type = CTextFieldType.PASSWORD,
                     onValueChange = {
                         passwordValue.value = it
+                        validateForm()
                     },
                     hintText = "Sua senha",
                     label = "SENHA",
@@ -117,7 +170,9 @@ fun LoginScreen(
                     text = "Acessar",
                     rightIcon = R.drawable.ic_arrow_right_02,
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {}
+                    onClick = {
+                        onAction(LoginActions.Login(emailValue.value, passwordValue.value))
+                    }
                 )
             }
             Column(
@@ -148,5 +203,8 @@ fun LoginScreen(
 @Preview
 @Composable
 private fun LoginScreenPreview() {
-    LoginScreen()
+    LoginScreen(
+        state = LoginScreenState.Idle,
+        listener = LoginScreenListener.Idle
+    )
 }

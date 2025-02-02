@@ -22,7 +22,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -36,10 +35,12 @@ import com.iagoaf.appmarketplace.core.ui.theme.gray200
 import com.iagoaf.appmarketplace.core.ui.theme.gray300
 import com.iagoaf.appmarketplace.core.ui.theme.orangeBase
 import com.iagoaf.appmarketplace.core.ui.theme.typography
+import com.iagoaf.appmarketplace.core.util.PhoneNumberVisualTransformation
 
 enum class CTextFieldType {
     IDLE,
     PASSWORD,
+    PHONE,
 }
 
 @Composable
@@ -50,6 +51,7 @@ fun CTextField(
     errorMessage: String? = null,
     onValueChange: (String) -> Unit,
     hintText: String,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     enabled: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     leftIcon: Int? = null,
@@ -140,7 +142,7 @@ fun CTextField(
                     }
                 }
             },
-            visualTransformation = if (type == CTextFieldType.PASSWORD && isObscure.value) PasswordVisualTransformation() else VisualTransformation.None,
+            visualTransformation = defineVisualTransformation(type, isObscure.value),
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { focusState ->
@@ -150,7 +152,7 @@ fun CTextField(
                     val strokeWidth = 1.dp.toPx()
                     val y = size.height - strokeWidth / 2
                     drawLine(
-                        color = gray100, // Cor da linha inferior
+                        color = gray100,
                         start = Offset(0f, y),
                         end = Offset(size.width, y),
                         strokeWidth = strokeWidth
@@ -164,6 +166,26 @@ fun CTextField(
                 color = Color.Red,
                 modifier = Modifier.padding(top = 4.dp)
             )
+        }
+    }
+}
+
+fun defineVisualTransformation(type: CTextFieldType, isObscure: Boolean): VisualTransformation {
+    return when (type) {
+        CTextFieldType.PASSWORD -> {
+            if (isObscure) {
+                PasswordVisualTransformation()
+            } else {
+                VisualTransformation.None
+            }
+        }
+
+        CTextFieldType.PHONE -> {
+            PhoneNumberVisualTransformation()
+        }
+
+        else -> {
+            VisualTransformation.None
         }
     }
 }

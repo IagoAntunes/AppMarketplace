@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import com.iagoaf.appmarketplace.core.result.onError
 import com.iagoaf.appmarketplace.core.result.onSuccess
 import com.iagoaf.appmarketplace.src.auth.register.RegisterActions
+import com.iagoaf.appmarketplace.src.auth.register.domain.models.UserModel
 import com.iagoaf.appmarketplace.src.auth.register.domain.repository.IAuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -30,7 +31,12 @@ class RegisterViewModel(
             }
 
             is RegisterActions.Register -> {
-                register(action.email, action.password)
+                register(
+                    action.name,
+                    action.phone,
+                    action.mail,
+                    action.password
+                )
             }
 
             RegisterActions.ResetListener -> {
@@ -43,12 +49,22 @@ class RegisterViewModel(
         navController.popBackStack()
     }
 
-    private fun register(email: String, password: String) {
+    private fun register(
+        name: String,
+        phone: String,
+        mail: String,
+        password: String
+    ) {
         viewModelScope.launch {
             _state.value = RegisterScreenState.Loading
-            authRepository.register(email, password)
+            val userModel = UserModel(
+                name = name,
+                phone = phone,
+                mail = mail,
+                password = password
+            )
+            authRepository.register(userModel)
                 .onSuccess { info ->
-                    Log.d("RegisterViewModel", "User registered: $info")
                     _state.value = RegisterScreenState.Idle
                     _listener.value = RegisterScreenListener.SuccessRegister
                 }
@@ -62,6 +78,7 @@ class RegisterViewModel(
 
     private fun resetListener() {
         _listener.value = RegisterScreenListener.Idle
+        _state.value = RegisterScreenState.Idle
     }
 
 }

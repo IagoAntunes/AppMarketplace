@@ -1,5 +1,6 @@
 package com.iagoaf.appmarketplace.src.auth.register.presentation
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -88,6 +89,7 @@ fun RegisterScreen(
     }
 
     LaunchedEffect(listener) {
+        Log.e("RegisterScreen", "Listener: $listener")
         when (listener) {
             is RegisterScreenListener.ErrorRegister -> {
 
@@ -208,6 +210,7 @@ fun RegisterScreen(
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Phone,
                         ),
+                        type = CTextFieldType.PHONE,
                         enabled = state !is RegisterScreenState.Loading,
                         label = "TELEFONE",
                         leftIcon = R.drawable.ic_call,
@@ -272,7 +275,9 @@ fun RegisterScreen(
                         onClick = {
                             onAction(
                                 RegisterActions.Register(
-                                    email = mailValue.value,
+                                    name = nameValue.value,
+                                    phone = phoneValue.value,
+                                    mail = mailValue.value,
                                     password = passwordValue.value
                                 )
                             )

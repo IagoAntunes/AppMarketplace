@@ -1,7 +1,6 @@
 package com.iagoaf.appmarketplace
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -19,7 +18,6 @@ import com.iagoaf.appmarketplace.core.ui.theme.AppMarketplaceTheme
 import com.iagoaf.appmarketplace.src.auth.login.presentation.screen.LoginScreen
 import com.iagoaf.appmarketplace.src.auth.login.presentation.viewModel.LoginViewModel
 import com.iagoaf.appmarketplace.src.auth.register.presentation.RegisterScreen
-import com.iagoaf.appmarketplace.src.auth.register.presentation.RegisterScreenListener
 import com.iagoaf.appmarketplace.src.auth.register.presentation.RegisterViewModel
 import com.iagoaf.appmarketplace.src.splash.presentation.screen.SplashScreen
 import com.iagoaf.appmarketplace.src.splash.presentation.viewModel.SplashViewModel
@@ -55,8 +53,12 @@ fun NavigationStack() {
         composable(route = AppMarketplaceRoutes.LoginScreenRoute.name) {
             val viewModel = koinViewModel<LoginViewModel>()
             viewModel.navController = navController
+            val state = viewModel.state.collectAsStateWithLifecycle().value
+            val listener = viewModel.listener.collectAsStateWithLifecycle().value
             LoginScreen(
-                onAction = viewModel::onAction
+                onAction = viewModel::onAction,
+                state = state,
+                listener = listener,
             )
         }
         composable(route = AppMarketplaceRoutes.RegisterScreenRoute.name) {
@@ -70,6 +72,9 @@ fun NavigationStack() {
                 state = state,
                 listener = listener,
             )
+        }
+        composable(route = AppMarketplaceRoutes.HomeScreenRoute.name) {
+            SplashScreen(onAction = {})
         }
     }
 }
