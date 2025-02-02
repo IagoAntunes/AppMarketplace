@@ -2,8 +2,8 @@ package com.iagoaf.appmarketplace.src.auth.register.external.datasource
 
 import android.util.Log
 import com.iagoaf.appmarketplace.core.result.Result
-import com.iagoaf.appmarketplace.services.database.DatabaseTables
-import com.iagoaf.appmarketplace.services.database.domain.entities.UserEntity
+import com.iagoaf.appmarketplace.services.server.DatabaseTables
+import com.iagoaf.appmarketplace.services.server.domain.entities.UserEntity
 import com.iagoaf.appmarketplace.src.auth.register.infra.datasource.IAuthDataSource
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
@@ -13,11 +13,11 @@ import io.github.jan.supabase.exceptions.RestException
 import io.github.jan.supabase.postgrest.from
 
 class AuthDataSourceImpl(
-    val supabase: SupabaseClient
+    val server: SupabaseClient
 ) : IAuthDataSource {
     override suspend fun register(email: String, password: String): Result<UserInfo, Error> {
         try {
-            val response = supabase.auth.signUpWith(Email) {
+            val response = server.auth.signUpWith(Email) {
                 this.email = email
                 this.password = password
             }
@@ -37,16 +37,16 @@ class AuthDataSourceImpl(
         password: String
     ): Result<Unit, Error> {
         try {
-            supabase.auth.signInWith(Email) {
+            server.auth.signInWith(Email) {
                 this.email = email
                 this.password = password
             }
 
-            val currentUser = supabase.auth.currentUserOrNull()
+            val currentUser = server.auth.currentUserOrNull()
             val uid = currentUser!!.id
 
             Log.w("RESPONSE UID", uid)
-            supabase.auth.currentAccessTokenOrNull()
+            server.auth.currentAccessTokenOrNull()
 
             return Result.Success(
                 data = Unit
@@ -58,10 +58,30 @@ class AuthDataSourceImpl(
         }
     }
 
+    override suspend fun currentUser(): Result<UserInfo, Error> {
+        try {
+            val user = server.auth.currentUserOrNull()
+            Log.w("CURRENTUSER", user.toString())
+            if (user == null) {
+                throw Exception("User not found")
+            }
+
+            return Result.Success(
+                data = user
+            )
+        } catch (e: RestException) {
+            Log.w("RESPONSE", "CURRENT USER error -> ${e.message}")
+            return Result.Error(Error(e.message ?: "Unknown error"))
+        } catch (e: Exception) {
+            Log.w("RESPONSE", "CURRENT USER error -> ${e.message}")
+            return Result.Error(Error(e.message ?: "Unknown error"))
+        }
+    }
+
     override suspend fun insertUserInfo(user: UserEntity): Result<Unit, Error> {
         try {
             Log.w("INSERTUSERTINFO", "ENTER INSERT")
-            supabase.from(DatabaseTables.USERS.nameTable)
+            server.from(DatabaseTables.USERS.nameTable)
                 .insert(user)
 
             Log.w("RESPONSE", "User inserted")

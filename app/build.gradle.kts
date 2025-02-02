@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.postgrest.kt)
     implementation(libs.auth.kt)
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

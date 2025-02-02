@@ -30,7 +30,7 @@ fun SplashScreen(
 ) {
 
     LaunchedEffect(Unit) {
-        onAction(SplashActions.NavigateToLogin)
+        onAction(SplashActions.VerifyIsLogged)
     }
 
     Scaffold(
