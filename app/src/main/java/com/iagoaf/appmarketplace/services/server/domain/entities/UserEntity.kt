@@ -1,4 +1,4 @@
-package com.iagoaf.appmarketplace.services.database.domain.entities
+package com.iagoaf.appmarketplace.services.server.domain.entities
 
 import kotlinx.serialization.Serializable
 

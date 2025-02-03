@@ -5,10 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,7 +17,7 @@ import com.iagoaf.appmarketplace.src.auth.login.presentation.screen.LoginScreen
 import com.iagoaf.appmarketplace.src.auth.login.presentation.viewModel.LoginViewModel
 import com.iagoaf.appmarketplace.src.auth.register.presentation.RegisterScreen
 import com.iagoaf.appmarketplace.src.auth.register.presentation.RegisterViewModel
-import com.iagoaf.appmarketplace.src.home.presentation.screens.HomeScreen
+import com.iagoaf.appmarketplace.src.home.presentation.screens.HomeNavManager
 import com.iagoaf.appmarketplace.src.splash.presentation.screen.SplashScreen
 import com.iagoaf.appmarketplace.src.splash.presentation.viewModel.SplashViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -74,7 +72,7 @@ fun NavigationStack() {
             )
         }
         composable(route = AppMarketplaceRoutes.HomeScreenRoute.name) {
-            HomeScreen()
+            HomeNavManager()
         }
     }
 }

@@ -45,6 +45,7 @@ enum class CTextFieldType {
 
 @Composable
 fun CTextField(
+    modifier: Modifier = Modifier,
     type: CTextFieldType = CTextFieldType.IDLE,
     value: String,
     label: String? = null,
@@ -56,33 +57,20 @@ fun CTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     leftIcon: Int? = null,
     rightIcon: Int? = null,
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
 ) {
     val isObscure = remember { mutableStateOf(true) }
     val isFocused = remember { mutableStateOf(false) }
     val hasEnteredText = remember { mutableStateOf(false) }
 
-    Column(
-        verticalArrangement = Arrangement.Center
-    ) {
-        if (label != null) {
-            Text(
-                text = label,
-                style = typography.labelMedium,
-                color = if (isFocused.value) orangeBase else gray300
-            )
-        }
+    val textFieldContent: @Composable () -> Unit = {
         OutlinedTextField(
             value = value,
             singleLine = singleLine,
             enabled = enabled,
             onValueChange = {
                 onValueChange(it)
-                if (it.isNotEmpty()) {
-                    hasEnteredText.value = true
-                } else {
-                    hasEnteredText.value = false
-                }
+                hasEnteredText.value = it.isNotEmpty()
             },
             textStyle = typography.bodyMedium.copy(
                 color = gray300,
@@ -99,29 +87,31 @@ fun CTextField(
                 unfocusedBorderColor = Color.Transparent,
                 focusedBorderColor = Color.Transparent
             ),
-            keyboardOptions = if (type == CTextFieldType.PASSWORD) KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Password,
-            ) else keyboardOptions,
+            keyboardOptions = if (type == CTextFieldType.PASSWORD) {
+                KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password)
+            } else {
+                keyboardOptions
+            },
             prefix = {
                 if (leftIcon != null) {
                     Image(
                         painter = painterResource(id = leftIcon),
                         contentDescription = "",
-                        colorFilter = if (isFocused.value || hasEnteredText.value) ColorFilter.tint(
-                            orangeBase
-                        ) else ColorFilter.tint(gray200),
+                        colorFilter = if (isFocused.value || hasEnteredText.value)
+                            ColorFilter.tint(orangeBase)
+                        else
+                            ColorFilter.tint(gray200),
                         modifier = Modifier.padding(end = 6.dp)
                     )
-                } else {
-                    null
                 }
             },
             suffix = {
                 if (type == CTextFieldType.PASSWORD) {
                     Spacer(Modifier.width(6.dp))
                     Image(
-                        painter = painterResource
-                            (id = if (isObscure.value) R.drawable.ic_view else R.drawable.ic_view_off),
+                        painter = painterResource(
+                            id = if (isObscure.value) R.drawable.ic_view else R.drawable.ic_view_off
+                        ),
                         contentDescription = "",
                         modifier = Modifier.clickable {
                             isObscure.value = !isObscure.value
@@ -133,17 +123,13 @@ fun CTextField(
                         Image(
                             painter = painterResource(id = rightIcon),
                             contentDescription = "",
-                            colorFilter = ColorFilter.tint(
-                                gray200
-                            )
+                            colorFilter = ColorFilter.tint(gray200)
                         )
-                    } else {
-                        null
                     }
                 }
             },
             visualTransformation = defineVisualTransformation(type, isObscure.value),
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .onFocusChanged { focusState ->
                     isFocused.value = focusState.isFocused
@@ -159,34 +145,43 @@ fun CTextField(
                     )
                 }
         )
-        if (errorMessage != null) {
-            Text(
-                text = errorMessage,
-                style = typography.bodySmall,
-                color = Color.Red,
-                modifier = Modifier.padding(top = 4.dp)
-            )
+    }
+
+    if (label != null || errorMessage != null) {
+        Column(
+            verticalArrangement = Arrangement.Center
+        ) {
+            if (label != null) {
+                Text(
+                    text = label,
+                    style = typography.labelMedium,
+                    color = if (isFocused.value) orangeBase else gray300
+                )
+            }
+            textFieldContent()
+            if (errorMessage != null) {
+                Text(
+                    text = errorMessage,
+                    style = typography.bodySmall,
+                    color = Color.Red,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
         }
+    } else {
+        // Caso contrário, renderiza somente o OutlinedTextField.x
+        textFieldContent()
     }
 }
 
 fun defineVisualTransformation(type: CTextFieldType, isObscure: Boolean): VisualTransformation {
     return when (type) {
         CTextFieldType.PASSWORD -> {
-            if (isObscure) {
-                PasswordVisualTransformation()
-            } else {
-                VisualTransformation.None
-            }
+            if (isObscure) PasswordVisualTransformation() else VisualTransformation.None
         }
 
-        CTextFieldType.PHONE -> {
-            PhoneNumberVisualTransformation()
-        }
-
-        else -> {
-            VisualTransformation.None
-        }
+        CTextFieldType.PHONE -> PhoneNumberVisualTransformation()
+        else -> VisualTransformation.None
     }
 }
 
@@ -206,7 +201,7 @@ fun CTextFieldPreview() {
 
 @Preview
 @Composable
-fun CTextFieldErrorStaePreview() {
+fun CTextFieldErrorStatePreview() {
     AppMarketplaceTheme {
         CTextField(
             value = "",
@@ -227,10 +222,8 @@ fun CTextFieldPasswordPreview() {
         CTextField(
             type = CTextFieldType.PASSWORD,
             value = emailValue.value,
-            onValueChange = {
-                emailValue.value = it
-            },
-            hintText = "Digite algo",
+            onValueChange = { emailValue.value = it },
+            hintText = "Digite algo"
         )
     }
 }

@@ -1,4 +1,4 @@
-package com.iagoaf.appmarketplace.services.database
+package com.iagoaf.appmarketplace.services.server
 
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth

@@ -3,12 +3,16 @@ package com.iagoaf.appmarketplace.core.ui.components
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -29,24 +33,47 @@ fun COutlinedIconButton(
     @DrawableRes icon: Int,
     modifier: Modifier = Modifier,
 ) {
-    OutlinedButton(
-        onClick = {},
-        border = BorderStroke(
-            width = 1.dp,
-            color = orangeBase
-        ),
-        contentPadding = if (type == COutlinedIconButtonSize.SMALL) PaddingValues(10.dp) else PaddingValues(
-            16.dp
-        ),
-        shape = RoundedCornerShape(10.dp),
-        modifier = modifier,
+    Box(
+        modifier = modifier
+            .border(
+                BorderStroke(1.dp, orangeBase),
+                shape = RoundedCornerShape(10.dp)
+            )
+            .padding(
+                if (type == COutlinedIconButtonSize.SMALL) PaddingValues(
+                    10.dp,
+                ) else PaddingValues(
+                    16.dp
+                )
+            )
     ) {
         Image(
             painter = painterResource(icon),
             contentDescription = "Icon",
-            colorFilter = ColorFilter.tint(orangeBase)
+            colorFilter = ColorFilter.tint(orangeBase),
+            modifier = Modifier.align(Alignment.Center)
         )
     }
+    /*
+        Box(
+        modifier = modifier
+            .padding(8.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .border(
+                BorderStroke(1.dp, orangeBase),
+                shape = RoundedCornerShape(10.dp)
+            )
+    ) {
+        Image(
+            painter = painterResource(icon),
+            contentDescription = "Icon",
+            colorFilter = ColorFilter.tint(orangeBase),
+            modifier = Modifier
+                .size(20.dp)
+                .align(Alignment.Center)
+        )
+    }
+     */
 }
 
 @Preview
