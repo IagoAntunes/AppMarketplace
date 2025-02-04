@@ -36,13 +36,17 @@ class LoginViewModel(
             }
 
             is LoginActions.NavigateToHome -> {
-                navigateToRegister()
+                navigateToHome()
             }
         }
     }
 
     private fun navigateToRegister() {
         navController.navigate(AppMarketplaceRoutes.RegisterScreenRoute.name)
+    }
+
+    private fun navigateToHome() {
+        navController.navigate(AppMarketplaceRoutes.HomeScreenRoute.name)
     }
 
     private fun loginAction(email: String, password: String) {
@@ -58,5 +62,6 @@ class LoginViewModel(
             _state.value = LoginScreenState.Idle
         }
     }
+
 
 }

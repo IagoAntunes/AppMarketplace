@@ -1,4 +1,4 @@
-package com.iagoaf.appmarketplace.src.home.presentation.screens
+package com.iagoaf.appmarketplace.src.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,12 +9,14 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -24,20 +26,27 @@ import com.iagoaf.appmarketplace.core.ui.theme.gray100
 import com.iagoaf.appmarketplace.core.ui.theme.orangeBase
 import com.iagoaf.appmarketplace.core.ui.theme.typography
 import com.iagoaf.appmarketplace.core.ui.theme.white
-import com.iagoaf.appmarketplace.src.home.presentation.HomeScreenRoutes
+import com.iagoaf.appmarketplace.src.home.advertisements.presentation.HomeNavItem
+import com.iagoaf.appmarketplace.src.home.profile.presentation.screens.ProfileNavItem
+import com.iagoaf.appmarketplace.src.home.profile.presentation.viewModel.ProfileViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeNavManager(modifier: Modifier = Modifier) {
-    val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+fun HomeNavManager(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+) {
+    val homeManagerNavController = rememberNavController()
+    val navBackStackEntry by homeManagerNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     val routes = listOf(
         HomeScreenRoutes.Home,
-        HomeScreenRoutes.Settings
+        HomeScreenRoutes.Profile
     )
 
     Scaffold(
+        modifier = modifier,
         bottomBar = {
             NavigationBar(
                 contentColor = white,
@@ -48,10 +57,10 @@ fun HomeNavManager(modifier: Modifier = Modifier) {
                         selected = currentRoute == route.route,
                         onClick = {
                             if (currentRoute != route.route) {
-                                navController.navigate(route.route) {
+                                homeManagerNavController.navigate(route.route) {
                                     launchSingleTop = true
                                     restoreState = true
-                                    popUpTo(navController.graph.startDestinationId) {
+                                    popUpTo(homeManagerNavController.graph.startDestinationId) {
                                         saveState = true
                                     }
                                 }
@@ -90,7 +99,7 @@ fun HomeNavManager(modifier: Modifier = Modifier) {
     ) { innerPadding ->
         NavHost(
             startDestination = HomeScreenRoutes.Home.route,
-            navController = navController,
+            navController = homeManagerNavController,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -98,8 +107,14 @@ fun HomeNavManager(modifier: Modifier = Modifier) {
             composable(route = HomeScreenRoutes.Home.route) {
                 HomeNavItem()
             }
-            composable(route = HomeScreenRoutes.Settings.route) {
-                HomeNavItem()
+            composable(route = HomeScreenRoutes.Profile.route) {
+                val viewModel = koinViewModel<ProfileViewModel>()
+                viewModel.appNavController = navController
+                val state = viewModel.state.collectAsState()
+                ProfileNavItem(
+                    onAction = viewModel::onAction,
+                    state = state.value,
+                )
             }
         }
     }
@@ -109,6 +124,8 @@ fun HomeNavManager(modifier: Modifier = Modifier) {
 @Composable
 private fun HomeScreenPreview() {
     AppMarketplaceTheme {
-        HomeNavManager()
+        HomeNavManager(
+            navController = rememberNavController()
+        )
     }
 }

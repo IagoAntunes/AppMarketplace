@@ -1,10 +1,11 @@
 package com.iagoaf.appmarketplace.src.auth.register.domain.models
 
-import java.math.BigInteger
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UserModel(
-    val name: String,
-    val phone: String,
+    var name: String,
+    var phone: String,
     val mail: String,
-    val password: String
+    val password: String = ""
 )

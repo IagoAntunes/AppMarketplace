@@ -1,4 +1,4 @@
-package com.iagoaf.appmarketplace.src.home.presentation.screens
+package com.iagoaf.appmarketplace.src.home.advertisements.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,11 +26,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.iagoaf.appmarketplace.R
 import com.iagoaf.appmarketplace.core.ui.components.COutlinedIconButton
 import com.iagoaf.appmarketplace.core.ui.components.COutlinedIconButtonSize
 import com.iagoaf.appmarketplace.core.ui.components.CTextField
+import com.iagoaf.appmarketplace.core.ui.theme.AppMarketplaceTheme
 import com.iagoaf.appmarketplace.core.ui.theme.background
 import com.iagoaf.appmarketplace.core.ui.theme.gray400
 import com.iagoaf.appmarketplace.core.ui.theme.gray500
@@ -46,7 +48,10 @@ fun HomeNavItem(modifier: Modifier = Modifier) {
             .background(background)
     ) {
         Column(
-            Modifier.padding(horizontal = 24.dp, vertical = 24.dp)
+            Modifier
+                .background(white)
+                .padding(horizontal = 24.dp, vertical = 24.dp)
+
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -82,17 +87,13 @@ fun HomeNavItem(modifier: Modifier = Modifier) {
                     }
                 }
             }
-        }
-        Spacer(Modifier.height(16.dp))
-        Column(
-            verticalArrangement = Arrangement.spacedBy(6.dp),
-            modifier = Modifier.padding(horizontal = 24.dp)
-        ) {
+            Spacer(Modifier.height(16.dp))
             Text(
                 text = "Explore produtos",
                 color = gray500,
                 style = typography.bodySmall,
             )
+            Spacer(Modifier.height(6.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Bottom
@@ -108,7 +109,8 @@ fun HomeNavItem(modifier: Modifier = Modifier) {
                 COutlinedIconButton(
                     type = COutlinedIconButtonSize.SMALL,
                     icon = R.drawable.ic_filter,
-                    modifier = Modifier.size(48.dp)
+                    modifier = Modifier.size(48.dp),
+                    onClick = {}
                 )
             }
         }
@@ -165,5 +167,13 @@ fun HomeNavItem(modifier: Modifier = Modifier) {
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun HomeNavItemPreview() {
+    AppMarketplaceTheme {
+        HomeNavItem()
     }
 }

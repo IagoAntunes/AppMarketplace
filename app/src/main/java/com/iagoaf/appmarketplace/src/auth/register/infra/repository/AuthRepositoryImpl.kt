@@ -5,10 +5,10 @@ import com.iagoaf.appmarketplace.core.result.Result
 import com.iagoaf.appmarketplace.services.sharedPreferences.SharedPreferencesKeys
 import com.iagoaf.appmarketplace.services.sharedPreferences.domain.ISharedPreferences
 import com.iagoaf.appmarketplace.src.auth.register.domain.mapper.toUserEntity
+import com.iagoaf.appmarketplace.src.auth.register.domain.mapper.toUserModel
 import com.iagoaf.appmarketplace.src.auth.register.domain.models.UserModel
 import com.iagoaf.appmarketplace.src.auth.register.domain.repository.IAuthRepository
 import com.iagoaf.appmarketplace.src.auth.register.infra.datasource.IAuthDataSource
-import io.github.jan.supabase.auth.user.UserInfo
 
 class AuthRepositoryImpl(
     val datasource: IAuthDataSource,
@@ -33,11 +33,23 @@ class AuthRepositoryImpl(
         return datasource.login(email, password)
     }
 
-    override suspend fun currentUser(): Result<UserInfo, Error> {
-        val result = datasource.currentUser()
+    override suspend fun logout(): Result<Unit, Error> {
+        return datasource.logout()
+    }
+
+    override suspend fun currentUser(): Result<UserModel, Error> {
+        val result = datasource.currentAuthUser()
         if (result is Result.Success) {
             sharedPreferences.saveData(SharedPreferencesKeys.USER_ID.nameKey, result.data.id)
+            val resultGetUserById = datasource.getUserById(result.data.id)
+            val userModel = result.data.toUserModel()
+            if (resultGetUserById is Result.Success) {
+                userModel.name = resultGetUserById.data.name
+                userModel.phone = resultGetUserById.data.phone
+            }
+            return Result.Success(userModel)
+        } else {
+            return Result.Error((result as Result.Error).error)
         }
-        return result
     }
 }

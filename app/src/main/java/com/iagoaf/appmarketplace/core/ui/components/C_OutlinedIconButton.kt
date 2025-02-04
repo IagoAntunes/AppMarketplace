@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -31,6 +32,7 @@ enum class COutlinedIconButtonSize {
 fun COutlinedIconButton(
     type: COutlinedIconButtonSize,
     @DrawableRes icon: Int,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -46,6 +48,9 @@ fun COutlinedIconButton(
                     16.dp
                 )
             )
+            .clickable {
+                onClick()
+            }
     ) {
         Image(
             painter = painterResource(icon),
@@ -82,5 +87,6 @@ private fun CIconButtonPreview() {
     COutlinedIconButton(
         type = COutlinedIconButtonSize.SMALL,
         icon = R.drawable.ic_mail,
+        onClick = {}
     )
 }

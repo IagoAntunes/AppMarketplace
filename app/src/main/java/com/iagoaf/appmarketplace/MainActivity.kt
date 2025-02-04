@@ -17,7 +17,7 @@ import com.iagoaf.appmarketplace.src.auth.login.presentation.screen.LoginScreen
 import com.iagoaf.appmarketplace.src.auth.login.presentation.viewModel.LoginViewModel
 import com.iagoaf.appmarketplace.src.auth.register.presentation.RegisterScreen
 import com.iagoaf.appmarketplace.src.auth.register.presentation.RegisterViewModel
-import com.iagoaf.appmarketplace.src.home.presentation.screens.HomeNavManager
+import com.iagoaf.appmarketplace.src.home.HomeNavManager
 import com.iagoaf.appmarketplace.src.splash.presentation.screen.SplashScreen
 import com.iagoaf.appmarketplace.src.splash.presentation.viewModel.SplashViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -72,7 +72,9 @@ fun NavigationStack() {
             )
         }
         composable(route = AppMarketplaceRoutes.HomeScreenRoute.name) {
-            HomeNavManager()
+            HomeNavManager(
+                navController = navController
+            )
         }
     }
 }

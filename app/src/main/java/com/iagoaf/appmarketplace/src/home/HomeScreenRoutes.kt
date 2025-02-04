@@ -1,4 +1,4 @@
-package com.iagoaf.appmarketplace.src.home.presentation
+package com.iagoaf.appmarketplace.src.home
 
 import androidx.annotation.DrawableRes
 import com.iagoaf.appmarketplace.R
@@ -11,6 +11,6 @@ sealed class HomeScreenRoutes(
     object Home :
         HomeScreenRoutes(route = "PRODUTOS", label = "PRODUTOS", icon = R.drawable.ic_store)
 
-    object Settings :
+    object Profile :
         HomeScreenRoutes(route = "PERFIL", label = "PERFIL", icon = R.drawable.ic_user)
 }

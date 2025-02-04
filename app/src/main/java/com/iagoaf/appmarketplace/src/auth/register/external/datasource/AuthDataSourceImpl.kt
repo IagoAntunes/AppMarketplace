@@ -5,12 +5,15 @@ import com.iagoaf.appmarketplace.core.result.Result
 import com.iagoaf.appmarketplace.services.server.DatabaseTables
 import com.iagoaf.appmarketplace.services.server.domain.entities.UserEntity
 import com.iagoaf.appmarketplace.src.auth.register.infra.datasource.IAuthDataSource
+import com.iagoaf.appmarketplace.src.home.profile.domain.models.ProfileModel
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.user.UserInfo
 import io.github.jan.supabase.exceptions.RestException
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.serialization.json.Json
 
 class AuthDataSourceImpl(
     val server: SupabaseClient
@@ -58,7 +61,18 @@ class AuthDataSourceImpl(
         }
     }
 
-    override suspend fun currentUser(): Result<UserInfo, Error> {
+    override suspend fun logout(): Result<Unit, Error> {
+        try {
+            server.auth.signOut()
+            return Result.Success(Unit)
+        } catch (e: RestException) {
+            return Result.Error(Error(e.message ?: "Unknown error"))
+        } catch (e: Exception) {
+            return Result.Error(Error(e.message ?: "Unknown error"))
+        }
+    }
+
+    override suspend fun currentAuthUser(): Result<UserInfo, Error> {
         try {
             val user = server.auth.currentUserOrNull()
             Log.w("CURRENTUSER", user.toString())
@@ -68,6 +82,32 @@ class AuthDataSourceImpl(
 
             return Result.Success(
                 data = user
+            )
+        } catch (e: RestException) {
+            Log.w("RESPONSE", "CURRENT USER error -> ${e.message}")
+            return Result.Error(Error(e.message ?: "Unknown error"))
+        } catch (e: Exception) {
+            Log.w("RESPONSE", "CURRENT USER error -> ${e.message}")
+            return Result.Error(Error(e.message ?: "Unknown error"))
+        }
+    }
+
+    override suspend fun getUserById(id: String): Result<ProfileModel, Error> {
+        try {
+            val response = server.postgrest.from(DatabaseTables.USERS.nameTable)
+                .select {
+                    filter {
+                        eq("userId", id)
+                    }
+                }
+
+            val json = Json { ignoreUnknownKeys = true }
+            val listUsers: List<ProfileModel> = json.decodeFromString(response.data)
+            if (listUsers.isEmpty()) {
+                throw Exception("User not found")
+            }
+            return Result.Success(
+                data = listUsers.first()
             )
         } catch (e: RestException) {
             Log.w("RESPONSE", "CURRENT USER error -> ${e.message}")
