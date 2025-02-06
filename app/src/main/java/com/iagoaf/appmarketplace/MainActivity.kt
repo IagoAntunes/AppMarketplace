@@ -11,6 +11,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.iagoaf.appmarketplace.core.routes.AppMarketplaceRoutes
 import com.iagoaf.appmarketplace.core.ui.theme.AppMarketplaceTheme
 import com.iagoaf.appmarketplace.src.auth.login.presentation.screen.LoginScreen
@@ -18,6 +19,9 @@ import com.iagoaf.appmarketplace.src.auth.login.presentation.viewModel.LoginView
 import com.iagoaf.appmarketplace.src.auth.register.presentation.RegisterScreen
 import com.iagoaf.appmarketplace.src.auth.register.presentation.RegisterViewModel
 import com.iagoaf.appmarketplace.src.home.HomeNavManager
+import com.iagoaf.appmarketplace.src.home.advertisements.domain.models.AdvertisementModel
+import com.iagoaf.appmarketplace.src.home.advertisements.presentation.screens.AdvertisementDetailScreen
+import com.iagoaf.appmarketplace.src.home.advertisements.presentation.viewModel.AdvertisementDetailViewModel
 import com.iagoaf.appmarketplace.src.splash.presentation.screen.SplashScreen
 import com.iagoaf.appmarketplace.src.splash.presentation.viewModel.SplashViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -74,6 +78,15 @@ fun NavigationStack() {
         composable(route = AppMarketplaceRoutes.HomeScreenRoute.name) {
             HomeNavManager(
                 navController = navController
+            )
+        }
+        composable<AdvertisementModel> { entry ->
+            val selectedAdvertisement = entry.toRoute<AdvertisementModel>()
+            val viewModel = koinViewModel<AdvertisementDetailViewModel>()
+            viewModel.navController = navController
+            AdvertisementDetailScreen(
+                onAction = viewModel::onAction,
+                advertisement = selectedAdvertisement,
             )
         }
     }

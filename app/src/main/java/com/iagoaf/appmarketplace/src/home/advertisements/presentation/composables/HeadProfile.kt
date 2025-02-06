@@ -1,4 +1,4 @@
-package com.iagoaf.appmarketplace.src.home.advertisements.presentation
+package com.iagoaf.appmarketplace.src.home.advertisements.presentation.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

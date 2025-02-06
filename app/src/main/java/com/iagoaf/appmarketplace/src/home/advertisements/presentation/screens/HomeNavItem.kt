@@ -1,4 +1,4 @@
-package com.iagoaf.appmarketplace.src.home.advertisements.presentation
+package com.iagoaf.appmarketplace.src.home.advertisements.presentation.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -11,6 +11,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.iagoaf.appmarketplace.core.ui.theme.background
+import com.iagoaf.appmarketplace.src.home.advertisements.presentation.viewModel.AdvertisementsViewModel
+import com.iagoaf.appmarketplace.src.home.advertisements.presentation.composables.HomeHead
+import com.iagoaf.appmarketplace.src.home.advertisements.presentation.composables.ListAdvertisements
 
 @Composable
 fun HomeNavItem(

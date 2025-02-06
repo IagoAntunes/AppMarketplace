@@ -1,5 +1,8 @@
 package com.iagoaf.appmarketplace.src.home.advertisements.domain.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class AdvertisementModel(
     val id: String,
     val title: String,

@@ -26,8 +26,8 @@ import com.iagoaf.appmarketplace.core.ui.theme.gray100
 import com.iagoaf.appmarketplace.core.ui.theme.orangeBase
 import com.iagoaf.appmarketplace.core.ui.theme.typography
 import com.iagoaf.appmarketplace.core.ui.theme.white
-import com.iagoaf.appmarketplace.src.home.advertisements.presentation.AdvertisementsViewModel
-import com.iagoaf.appmarketplace.src.home.advertisements.presentation.HomeNavItem
+import com.iagoaf.appmarketplace.src.home.advertisements.presentation.viewModel.AdvertisementsViewModel
+import com.iagoaf.appmarketplace.src.home.advertisements.presentation.screens.HomeNavItem
 import com.iagoaf.appmarketplace.src.home.profile.presentation.screens.ProfileNavItem
 import com.iagoaf.appmarketplace.src.home.profile.presentation.viewModel.ProfileViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -107,6 +107,7 @@ fun HomeNavManager(
         ) {
             composable(route = HomeScreenRoutes.Home.route) {
                 val advertisementsViewModel = koinViewModel<AdvertisementsViewModel>()
+                advertisementsViewModel.navController = navController
                 HomeNavItem(
                     advertisementsViewModel = advertisementsViewModel,
                 )

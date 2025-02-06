@@ -1,6 +1,7 @@
-package com.iagoaf.appmarketplace.src.home.advertisements.presentation
+package com.iagoaf.appmarketplace.src.home.advertisements.presentation.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,7 +54,6 @@ fun ListAdvertisements(
         onAction(ListAdvertisementsActions.GetAll)
     }
 
-
     Column {
         Text(
             text = "Explore produtos",
@@ -78,7 +78,9 @@ fun ListAdvertisements(
                 type = COutlinedIconButtonSize.SMALL,
                 icon = R.drawable.ic_filter,
                 modifier = Modifier.size(48.dp),
-                onClick = {}
+                onClick = {
+
+                }
             )
         }
     }
@@ -103,6 +105,13 @@ fun ListAdvertisements(
                             .clip(RoundedCornerShape(12.dp))
                             .background(white)
                             .padding(6.dp)
+                            .clickable {
+                                onAction(
+                                    ListAdvertisementsActions.NavigateToAdvertisementDetail(
+                                        advertisement
+                                    )
+                                )
+                            }
                     ) {
                         Column(
                             modifier = Modifier.fillMaxSize()
