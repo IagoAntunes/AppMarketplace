@@ -54,7 +54,16 @@ fun ListAdvertisements(
         onAction(ListAdvertisementsActions.GetAll)
     }
 
-    Column {
+    Column(
+        modifier = Modifier
+            .background(white)
+            .padding(
+                start = 24.dp,
+                end = 24.dp,
+                top = 12.dp,
+                bottom = 12.dp,
+            )
+    ) {
         Text(
             text = "Explore produtos",
             color = gray500,
@@ -68,7 +77,10 @@ fun ListAdvertisements(
             CTextField(
                 value = filterValue.value,
                 leftIcon = R.drawable.ic_search,
-                onValueChange = {},
+                onValueChange = {
+                    filterValue.value = it
+                    onAction(ListAdvertisementsActions.FilterList(it))
+                },
                 enabled = state is ListAdvertisementsState.Success,
                 hintText = "Pesquisar",
                 modifier = Modifier.weight(1f)
@@ -98,7 +110,7 @@ fun ListAdvertisements(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(state.advertisements) { advertisement ->
+                items(state.filterAdvertisements) { advertisement ->
                     Box(
                         modifier = Modifier
                             .size(167.dp, 152.dp)

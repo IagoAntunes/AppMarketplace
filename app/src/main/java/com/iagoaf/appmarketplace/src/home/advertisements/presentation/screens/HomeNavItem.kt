@@ -24,11 +24,10 @@ fun HomeNavItem(
         modifier = modifier
             .fillMaxSize()
             .background(background)
-            .padding(horizontal = 24.dp, vertical = 24.dp)
+            .padding()
     ) {
 
         HomeHead()
-        Spacer(Modifier.height(16.dp))
         ListAdvertisements(
             state = advertisementsViewModel.state.collectAsState().value,
             onAction = advertisementsViewModel::onAction

@@ -2,11 +2,14 @@ package com.iagoaf.appmarketplace.src.home.advertisements.presentation.composabl
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,11 +26,17 @@ import com.iagoaf.appmarketplace.R
 import com.iagoaf.appmarketplace.core.ui.theme.gray500
 import com.iagoaf.appmarketplace.core.ui.theme.orangeBase
 import com.iagoaf.appmarketplace.core.ui.theme.typography
+import com.iagoaf.appmarketplace.core.ui.theme.white
 
 @Composable
 fun HomeHead(modifier: Modifier = Modifier) {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth().background(white).padding(
+            start = 24.dp,
+            end = 24.dp,
+            top = 24.dp
+        )
     ) {
         Box(
             modifier = Modifier
@@ -49,6 +58,9 @@ fun HomeHead(modifier: Modifier = Modifier) {
                     text = "Ver perfil",
                     color = orangeBase,
                     style = typography.bodySmall,
+                    modifier = Modifier.clickable {
+
+                    }
                 )
                 Spacer(Modifier.width(4.dp))
                 Image(
